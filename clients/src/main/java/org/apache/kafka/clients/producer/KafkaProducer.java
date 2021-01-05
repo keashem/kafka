@@ -755,6 +755,10 @@ public class KafkaProducer<K, V> implements Producer<K, V> {
      * modify the public send method to send a RecordBatch directly to a topic。
      */
     public Future<RecordMetadata> send(RecordBatch recordBatchRaw,String batchTopic) throws InterruptedException {
+       return send(recordBatchRaw,batchTopic,null);
+    }
+
+    public Future<RecordMetadata> send(RecordBatch recordBatchRaw,String batchTopic,Callback callback) throws InterruptedException {
         if(recordBatchRaw == null || !(recordBatchRaw instanceof DefaultRecordBatchModify)){
             return null;
         }
@@ -784,7 +788,7 @@ public class KafkaProducer<K, V> implements Producer<K, V> {
                 log.trace("Attempting to append recordBatch {} to batchTopic {} partition {}", recordBatch, batchTopic, partition);
             }
             // producer callback will make sure to call both 'callback' and interceptor callback
-            Callback interceptCallback = new KafkaProducer.InterceptorCallback<>(null, this.interceptors, newTopicPartition);
+            Callback interceptCallback = new KafkaProducer.InterceptorCallback<>(callback, this.interceptors, newTopicPartition);
 
             if (transactionManager != null && transactionManager.isTransactional()) {
                 transactionManager.failIfNotReadyForSend();

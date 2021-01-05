@@ -290,6 +290,8 @@ public final class RecordAccumulator {
                 //下面的方法返回了一个MemoryRecordsBuilder。
                 MemoryRecordsBuilder recordsBuilder = recordsBuilder(recordBatch, constructBatchBuffer, maxUsableMagic);
                 ProducerBatch batch = new ProducerBatch(tp, recordsBuilder, nowMs,0);
+                batch.tryAppend(callback,nowMs);
+
                 dq.addLast(batch);
                 incomplete.add(batch); // 将当前 batch 加入 incomplete 中，incomplete 将用于 Sender 发送之后的释放 BufferPool 中 ByteBuffer。
                 return new RecordAppendResult(null, dq.size() > 1 || batch.isFull(), true, false);

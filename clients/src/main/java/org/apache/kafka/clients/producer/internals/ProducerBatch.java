@@ -126,6 +126,19 @@ public final class ProducerBatch {
         }
     }
 
+
+    public FutureRecordMetadata tryAppend(Callback callback,long now) {
+        // 以下只用封装 callback 最后执行回调即可
+        FutureRecordMetadata future = new FutureRecordMetadata(this.produceFuture, this.recordCount,
+                now, (long)-1,
+                -1 ,
+                -1,
+                Time.SYSTEM);
+        thunks.add(new Thunk(callback, future));
+        this.recordCount++;
+        return future;
+    }
+
     /**
      * This method is only used by {@link #split(int)} when splitting a large batch to smaller ones.
      * @return true if the record has been successfully appended, false otherwise.
