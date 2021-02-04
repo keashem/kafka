@@ -26,8 +26,8 @@ public final class TopicPartition implements Serializable {
     private static final long serialVersionUID = -613627415771699627L;
 
     private int hash = 0;
-    private final int partition;
-    private final String topic;
+    private int partition;
+    private String topic;
 
     public TopicPartition(String topic, int partition) {
         this.partition = partition;
@@ -40,6 +40,14 @@ public final class TopicPartition implements Serializable {
 
     public String topic() {
         return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public void setPartition(int partition) {
+        this.partition = partition;
     }
 
     @Override

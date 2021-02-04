@@ -1062,7 +1062,7 @@ public class KafkaProducer<K, V> implements Producer<K, V> {
      * @throws TimeoutException if metadata could not be refreshed within {@code max.block.ms}
      * @throws KafkaException for all Kafka-related exceptions, including the case where this method is called after producer close
      */
-    private ClusterAndWaitTime waitOnMetadata(String topic, Integer partition, long nowMs, long maxWaitMs) throws InterruptedException {
+    public ClusterAndWaitTime waitOnMetadata(String topic, Integer partition, long nowMs, long maxWaitMs) throws InterruptedException {
         // add topic to metadata topic list if it is not there already and reset expiry
         Cluster cluster = metadata.fetch();
 
@@ -1356,12 +1356,20 @@ public class KafkaProducer<K, V> implements Producer<K, V> {
         return clientId;
     }
 
-    private static class ClusterAndWaitTime {
+    public static class ClusterAndWaitTime {
         final Cluster cluster;
         final long waitedOnMetadataMs;
         ClusterAndWaitTime(Cluster cluster, long waitedOnMetadataMs) {
             this.cluster = cluster;
             this.waitedOnMetadataMs = waitedOnMetadataMs;
+        }
+
+        public Cluster getCluster() {
+            return cluster;
+        }
+
+        public long getWaitedOnMetadataMs() {
+            return waitedOnMetadataMs;
         }
     }
 
